@@ -33,6 +33,11 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
     const [categories, setCategories] = useState<Category[]>([]);
     const [items, setItems] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+
+    const toggleDescription = (itemId: string) => {
+        setExpandedItems(prev => ({ ...prev, [itemId]: !prev[itemId] }));
+    };
     const [activeCategory, setActiveCategory] = useState<string>('all');
 
     const coverImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000";
@@ -215,14 +220,24 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
 
                                 <div className="grid grid-cols-1 gap-4">
                                     {catItems.map((item) => (
-                                        <div key={item.id} className="bg-gradient-to-br from-white to-orange-50/30 dark:from-slate-800 dark:to-slate-900/50 p-4 rounded-3xl shadow-sm flex gap-4 border border-orange-100/50 dark:border-slate-700 transition-all active:scale-[0.98] cursor-pointer hover:shadow-md hover:border-orange-200/50 h-fit relative overflow-hidden group">
+                                        <div key={item.id} className="bg-gradient-to-br from-white to-orange-50/30 dark:from-slate-800 dark:to-slate-900/50 p-4 rounded-3xl shadow-sm flex gap-4 border border-orange-100/50 dark:border-slate-700 transition-all active:scale-[0.98] cursor-pointer hover:shadow-md hover:border-orange-200/50 relative overflow-hidden group">
                                             <div className="flex-1 min-w-0 flex flex-col justify-between relative z-10">
                                                 <div>
                                                     <h3 className="font-bold text-[17px] mb-1 leading-tight text-slate-900 dark:text-white truncate">{item.name}</h3>
                                                     {item.description && (
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-2 line-clamp-2 leading-snug">
-                                                            {item.description}
-                                                        </p>
+                                                        <div className="mb-2">
+                                                            <p className={`text-sm text-slate-500 dark:text-slate-400 leading-snug transition-all ${expandedItems[item.id] ? '' : 'line-clamp-2'}`}>
+                                                                {item.description}
+                                                            </p>
+                                                            {item.description.length > 80 && (
+                                                                <button
+                                                                    onClick={(e) => { e.stopPropagation(); toggleDescription(item.id); }}
+                                                                    className="text-[#FE5F55] text-xs font-semibold mt-0.5 hover:underline"
+                                                                >
+                                                                    {expandedItems[item.id] ? 'Ver menos ▲' : 'Ver mais ▼'}
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </div>
                                                 <span className="text-[#FE5F55] font-bold text-lg inline-block">
@@ -232,11 +247,11 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
 
                                             {item.image_url ? (
                                                 <div
-                                                    className="w-[100px] h-[100px] rounded-xl bg-center bg-cover shrink-0 border border-gray-100 shadow-sm overflow-hidden"
+                                                    className="w-[100px] h-[100px] rounded-xl bg-center bg-cover shrink-0 border border-gray-100 shadow-sm overflow-hidden self-start"
                                                     style={{ backgroundImage: `url('${item.image_url}')` }}
                                                 />
                                             ) : (
-                                                <div className="w-[100px] h-[100px] rounded-xl bg-gray-50 dark:bg-slate-700 flex flex-col items-center justify-center shrink-0 border border-gray-100 dark:border-slate-600 text-gray-400">
+                                                <div className="w-[100px] h-[100px] rounded-xl bg-gray-50 dark:bg-slate-700 flex flex-col items-center justify-center shrink-0 border border-gray-100 dark:border-slate-600 text-gray-400 self-start">
                                                     <span className="text-[10px] font-medium">Sem foto</span>
                                                 </div>
                                             )}
