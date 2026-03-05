@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#fe5e52",
+              "background-light": "#f8f6f5",
+              "background-dark": "#23100f",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<title>O Burger Digital Menu</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center justify-between px-4 py-4">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center size-10 rounded-full bg-white dark:bg-slate-800 shadow-sm">
+<span class="material-symbols-outlined text-slate-900 dark:text-white">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">O Burger</h1>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center size-10 rounded-full bg-white dark:bg-slate-800 shadow-sm">
+<span class="material-symbols-outlined text-slate-900 dark:text-white">search</span>
+</button>
+<button class="flex items-center justify-center size-10 rounded-full bg-white dark:bg-slate-800 shadow-sm">
+<span class="material-symbols-outlined text-slate-900 dark:text-white">favorite</span>
+</button>
+</div>
+</div>
+<div class="flex gap-3 px-4 pb-4 overflow-x-auto no-scrollbar">
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-primary px-6 text-white font-semibold">
+<p class="text-sm">Todos</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 text-slate-600 dark:text-slate-300 font-medium">
+<p class="text-sm">Lanches</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 text-slate-600 dark:text-slate-300 font-medium">
+<p class="text-sm">Bebidas</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 text-slate-600 dark:text-slate-300 font-medium">
+<p class="text-sm">Sobremesas</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 text-slate-600 dark:text-slate-300 font-medium">
+<p class="text-sm">Porções</p>
+</div>
+</div>
+</header>
+<main class="pb-32">
+<section class="px-4 py-2">
+<div class="relative w-full h-64 rounded-xl overflow-hidden shadow-lg mb-8">
+<div class="absolute inset-0 bg-center bg-cover" data-alt="Gourmet double cheeseburger with fresh ingredients" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAMkIC6zLjZgym21uIPOVduUUv7-85pgoep-gDBxqlDvaMNqtofYzQOAU0fvBstEdzVtcA4Soa39T9sMvxpqYXgHG26YShW_i66WB8K--BTacanRKGPQeQZaf8h7dc-AE1vJMXFgdodBMrzWt7FuP9k9gMHNCMVH0XhUqWBZxqJ6HdQfyprwL5jkI3QvphoJiZ3s-nsid8_18Z7BfgNHLwjTMYLFgefs0tCSexqCOoBHkuRTW8qrRmfrZP9-Ldd8Q24AxgusBBN5mNL');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+<div class="flex gap-2">
+<div class="flex items-center gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-3 py-2 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="text-xs font-bold">4.8</span>
+</div>
+<div class="flex items-center gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-3 py-2 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-primary text-sm">schedule</span>
+<span class="text-xs font-bold">25-35 min</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-3 py-2 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-green-500 text-sm">delivery_dining</span>
+<span class="text-xs font-bold text-slate-900 dark:text-slate-100">R$ 5,00</span>
+</div>
+</div>
+</div>
+</section>
+<section class="px-4 space-y-6">
+<div>
+<h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">lunch_dining</span>
+                    Lanches
+                </h2>
+<div class="grid gap-4">
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm flex gap-4 border border-slate-100 dark:border-slate-700">
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1">Classic Burger</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">Pão brioche, carne Angus 160g, queijo cheddar derretido, alface crespa, tomate e molho especial da casa.</p>
+<span class="text-primary font-bold text-lg">R$ 32,90</span>
+</div>
+<div class="size-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Classic beef burger on brioche bun" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAnaO5srq3kX6KsFHPKRDkLIbUTwOVxTKi0XnT7A-NesgC5czWycqUSJgTqFrb_ksnkM9DEmUBXt_NFVoguUASAszBvx0u6-2c3aW21AwIIZHWbs5z5WejQuPm55gff7bWuO86RL_L_HaEWj6TdjkeEfFBi01t2LCrHa2x3kb2DFYZpyY1NB7LWbOwKe07zVoo4fz2ye2wMRdoa7PO1nQJxR9AUusyAfWAJr1XEvYpOmLmWdty3U45V8C8wKF6OXGyp7CpBMz7oV7l2');"></div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm flex gap-4 border border-slate-100 dark:border-slate-700">
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1">Bacon Deluxe</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">Carne 160g, tiras de bacon crocante, cebola caramelizada, queijo prato e maionese defumada.</p>
+<span class="text-primary font-bold text-lg">R$ 38,50</span>
+</div>
+<div class="size-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Bacon cheeseburger with caramelized onions" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvq0sgla7QNBuIQeExsVJQNRWgG5nTecwtHUL41RQB2UgC57XbcUXp4NCcXPn9vZZHDIOqpv8WOUtF2EbpPYzNEhOup1CbCE7Kux0IlSDlFxp5SH2GVdDCR0Zmw5qE4gRpLZo7-6flEMozBmid21SEj_Z4bLib_ZiiiVd1w12mtOZgMTzlvTb8Ai627mB33DNPDt1t2MHphouq3kXgoX11xfOp2MuloQXH_vmI3oljZ1W1tLd-DARj1LxSFXkbWRpgouLOpbKDoaPD');"></div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm flex gap-4 border border-slate-100 dark:border-slate-700">
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1">Veggie Power</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">Hambúrguer de grão de bico, queijo de castanhas, rúcula fresca e molho pesto.</p>
+<span class="text-primary font-bold text-lg">R$ 34,00</span>
+</div>
+<div class="size-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Delicious plant based veggie burger" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBM-l1XGARUyys0X1YfihtCZd0sZA8ucPn28eTqiPPtTf3NQtC5CftmRojD60yOqxXU4gI2OWmUT5k72u59cdJ66Vydybbl7rURJZAvL5g0n2J4CNOmD2ovHJbNg8BQzKoAXs4VinZ1i2gVO0ZAw1WInbr1G0_GFmVY6o8vBGQL6Hb7xzibXJ70VL4uciQwVUJdbzhHj7NzFlVUIesDh3qEcSNDIiGF4RApAXu6nwG0MY7k-gZmf2G69WualiX9SGs00ljk5oGL5mON');"></div>
+</div>
+</div>
+</div>
+<div>
+<h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">local_bar</span>
+                    Bebidas
+                </h2>
+<div class="grid gap-4">
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm flex gap-4 border border-slate-100 dark:border-slate-700">
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1">Milkshake Nutella</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">500ml de pura cremosidade com sorvete de baunilha e Nutella original.</p>
+<span class="text-primary font-bold text-lg">R$ 22,00</span>
+</div>
+<div class="size-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Chocolate milkshake with nutella drizzle" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAuxQCToPj_8D21Vbf_TwaiCle8REVGk9HX9ekOzNfCMzb4QbskS8Wtdfp45b8AlpV26yPcU6vgI8K0sncnqOWz66w7w_uEK9eu7J6XTnl-KkM62ayDm-sRF_a2fB7SVcxtRdEEFoJWqM-r1iccVgZAMxKcZVs6BV700e6UiT2cpJ7IeIIv23mjzKQXHRfYgJQa7pRctrD_4IzIX-_y_Kybdhg6K05bUAzt88wSWy4oBDxhc9xw3aYE3j-HWxfBhIEP5o7ghdGcuUH');"></div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm flex gap-4 border border-slate-100 dark:border-slate-700">
+<div class="flex-1">
+<h3 class="font-bold text-lg mb-1">Soda Artesanal Morango</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">Refrescante soda de morango com pedaços da fruta e hortelã.</p>
+<span class="text-primary font-bold text-lg">R$ 14,00</span>
+</div>
+<div class="size-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Red fruit artisan soda with mint" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoKMO_lbp_PLfjcvcxSSHBBK1pVzP8gEIIaNzuv5cZrW4xpaOo4cFSFZ2aZ7FYRSNG8YYSOl14aXnZcw3NJDBOKlDtUoufR2O0RwWAhchd503CZMtqS0udMO9r4Dk2ipeuDbR0dXorH9G_m_Bvh5Omi3swswPZm7OIeSU06nFHZwRlvAQP8brOaUemnXr74HkPGgXDhOYhSqI6g9giw_GTBH6L1aT_xIq0MJFyb-sOW3ezFlrHs82SzD2ScUeP2hfPNR_QtA6x-t2H');"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-11/12 max-w-md z-[60]">
+<button class="w-full bg-primary hover:bg-primary/90 text-white flex items-center justify-between px-6 py-4 rounded-full shadow-2xl transition-all active:scale-95">
+<div class="flex items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined text-2xl">shopping_cart</span>
+<span class="absolute -top-2 -right-2 bg-white text-primary text-[10px] font-bold size-4 flex items-center justify-center rounded-full">0</span>
+</div>
+<span class="font-bold tracking-tight">Ver Carrinho</span>
+</div>
+<span class="font-bold text-lg">R$ 0,00</span>
+</button>
+</div>
+<nav class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">home</span>
+<span class="text-[10px] font-bold">Início</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-[10px] font-medium">Busca</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-medium">Pedidos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Perfil</span>
+</a>
+</nav>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .fill-1 {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</body></html>
