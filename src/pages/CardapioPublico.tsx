@@ -221,7 +221,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
                                                 <div>
                                                     <h3 className="font-bold text-[17px] mb-1 leading-tight text-slate-900 dark:text-white truncate">{item.name}</h3>
                                                     {item.description && (
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-2 line-clamp-2 leading-snug">
+                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-2 leading-snug">
                                                             {item.description}
                                                         </p>
                                                     )}

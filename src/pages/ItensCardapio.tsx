@@ -257,14 +257,14 @@ export default function ItensCardapio() {
                             <div>
                                 <div className="flex justify-between items-center mb-1">
                                     <label className="block text-sm font-medium text-gray-700">Descrição</label>
-                                    <span className={`text-xs font-medium ${description.length > 70 ? 'text-[#FE5F55]' : 'text-gray-400'}`}>
-                                        {description.length}/80
+                                    <span className={`text-xs font-medium ${description.length > 50 ? 'text-[#FE5F55]' : 'text-gray-400'}`}>
+                                        {description.length}/60
                                     </span>
                                 </div>
                                 <textarea
                                     value={description} onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Ingredientes e detalhes do produto..."
-                                    maxLength={80} rows={3}
+                                    maxLength={60} rows={3}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FE5F55] outline-none resize-none"
                                 />
                                 <p className="text-xs text-gray-400 mt-1">Limite calibrado para caber no card do celular.</p>
