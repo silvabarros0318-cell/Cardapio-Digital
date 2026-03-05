@@ -34,11 +34,12 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
     const [items, setItems] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+    const [activeCategory, setActiveCategory] = useState<string>('all');
 
     const toggleDescription = (itemId: string) => {
         setExpandedItems(prev => ({ ...prev, [itemId]: !prev[itemId] }));
     };
-    const [activeCategory, setActiveCategory] = useState<string>('all');
+
 
     const coverImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000";
 
