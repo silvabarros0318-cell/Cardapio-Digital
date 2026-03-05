@@ -125,7 +125,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
             {/* 1. Top Banner Bar (Brand Color) */}
             <div className="bg-[#FE5F55] py-3 px-4 text-center shadow-sm">
-                <h1 className="text-white font-bold text-base">
+                <h1 className="text-white font-bold text-base" translate="no">
                     {restaurant.name}
                 </h1>
             </div>
@@ -155,7 +155,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
 
                     {/* Restaurant Name & Mesa */}
                     <div className="flex-1 pb-1">
-                        <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight">
+                        <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight" translate="no">
                             {restaurant.name}
                         </h2>
                         {mesa && (
@@ -188,6 +188,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
                                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-200'
                                 : 'bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-700'
                                 }`}
+                            translate="no"
                         >
                             {cat.name}
                         </button>
@@ -206,7 +207,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
                             <div key={category.id} id={`category-${category.id}`} className="scroll-m-32">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="bg-gradient-to-br from-[#FE5F55] to-orange-400 w-2.5 h-8 rounded-full shadow-sm"></div>
-                                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight" translate="no">
                                         {category.name}
                                     </h2>
                                     <div className="flex-1 h-[2px] bg-gradient-to-r from-slate-100 to-transparent dark:from-slate-800"></div>
