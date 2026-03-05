@@ -59,7 +59,7 @@ export default function AdminLayout() {
                             <ChefHat className="w-6 h-6 text-white" />
                         </div>
                     )}
-                    <span className="font-bold text-lg text-gray-900 truncate">
+                    <span className="font-bold text-lg text-gray-900 truncate" translate="no">
                         {restaurant?.name || 'Admin'}
                     </span>
                 </Link>

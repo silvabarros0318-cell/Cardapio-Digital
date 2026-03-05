@@ -181,7 +181,7 @@ export default function Categorias() {
                                             <GripVertical className="w-5 h-5" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="text-gray-900 font-medium truncate">{cat.name}</h4>
+                                            <h4 className="text-gray-900 font-medium truncate" translate="no">{cat.name}</h4>
                                             {cat.description && (
                                                 <p className="text-gray-500 text-sm truncate">{cat.description}</p>
                                             )}

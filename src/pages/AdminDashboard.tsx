@@ -62,7 +62,7 @@ export default function AdminDashboard() {
             {/* Welcome Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-gradient-to-r from-[#FE5F55] to-orange-400 p-8 md:p-10 rounded-[2.5rem] text-white shadow-xl shadow-red-200/50 relative overflow-hidden">
                 <div className="relative z-10">
-                    <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">
+                    <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight" translate="no">
                         Olá, {stats?.restaurantName.split(' ')[0]}! 👋
                     </h1>
                     <p className="text-orange-50 font-medium opacity-90 max-w-md">
