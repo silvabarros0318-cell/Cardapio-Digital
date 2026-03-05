@@ -230,7 +230,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
                                                             <p className={`text-sm text-slate-500 dark:text-slate-400 leading-snug transition-all ${expandedItems[item.id] ? '' : 'line-clamp-2'}`}>
                                                                 {item.description}
                                                             </p>
-                                                            {item.description.length > 80 && (
+                                                            {item.description.length > 40 && (
                                                                 <button
                                                                     onClick={(e) => { e.stopPropagation(); toggleDescription(item.id); }}
                                                                     className="text-[#FE5F55] text-xs font-semibold mt-0.5 hover:underline"
