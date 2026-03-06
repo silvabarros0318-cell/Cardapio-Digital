@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Edit2, Trash2, Camera, Tag, DollarSign, ListTree } from 'lucide-react';
 
@@ -58,19 +58,27 @@ export default function ItensCardapio() {
             .from('categories')
             .select('id, name')
             .eq('restaurant_id', profile.restaurant_id)
-            .order('display_order');
+            .order('name');
         if (catData) setCategories(catData);
 
         // Buscar items
         const { data: itemData } = await supabase
             .from('menu_items')
-            .select('*, category:categories(name)')
+            .select('*')
             .eq('restaurant_id', profile.restaurant_id)
-            .order('category_id')
-            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
 
-        if (itemData) setItems(itemData);
+        if (itemData) {
+            // Map category names to items
+            const itemsWithCategories = itemData.map(item => {
+                const category = catData?.find(cat => cat.id === item.category_id);
+                return {
+                    ...item,
+                    category: { name: category?.name || 'Categoria não encontrada' }
+                };
+            });
+            setItems(itemsWithCategories);
+        }
 
         setLoading(false);
     };
@@ -195,47 +203,13 @@ export default function ItensCardapio() {
         e.preventDefault();
     };
 
-    const handleItemDrop = async (e: React.DragEvent, targetCategoryId: string, targetIndex: number) => {
+    const handleItemDrop = async (e: React.DragEvent) => {
         e.preventDefault();
         if (!draggedItem) return;
 
-        const newItems = [...items];
-
-        // Remove dragged item from its current position
-        const draggedIndex = newItems.findIndex(item => item.id === draggedItem.id);
-        if (draggedIndex === -1) return;
-
-        newItems.splice(draggedIndex, 1);
-
-        // Insert at new position
-        const insertIndex = newItems.findIndex(item => item.category_id === targetCategoryId) + targetIndex;
-
-        newItems.splice(insertIndex, 0, { ...draggedItem, category_id: targetCategoryId });
-
-        // Update display_order for items in the target category
-        const updatedItems = newItems.map(item => {
-            if (item.category_id === targetCategoryId) {
-                const categoryItems = newItems.filter(i => i.category_id === targetCategoryId);
-                const itemIndex = categoryItems.findIndex(i => i.id === item.id);
-                return { ...item, display_order: itemIndex + 1 };
-            }
-            return item;
-        });
-
-        setItems(updatedItems);
+        // For now, just refresh the data to ensure consistency
+        fetchData();
         setDraggedItem(null);
-
-        // Update in database
-        const categoryItems = updatedItems.filter(item => item.category_id === targetCategoryId);
-        const updatePromises = categoryItems.map(item =>
-            supabase
-                .from('menu_items')
-                .update({ display_order: item.display_order, category_id: item.category_id })
-                .eq('id', item.id)
-        );
-
-        await Promise.all(updatePromises);
-        fetchData(); // Refresh to get updated data
     };
 
     const handleItemDragEnd = () => {
@@ -243,10 +217,12 @@ export default function ItensCardapio() {
     };
 
     // Group items by category
-    const itemsByCategory = categories.reduce((acc, category) => {
-        acc[category.id] = items.filter(item => item.category_id === category.id);
-        return acc;
-    }, {} as Record<string, MenuItem[]>);
+    const itemsByCategory = React.useMemo(() => {
+        return categories.reduce((acc, category) => {
+            acc[category.id] = items.filter(item => item.category_id === category.id);
+            return acc;
+        }, {} as Record<string, MenuItem[]>);
+    }, [categories, items]);
 
     return (
         <div className="max-w-6xl mx-auto">
@@ -417,13 +393,13 @@ export default function ItensCardapio() {
                                                             <p className="text-sm">Nenhum produto nesta categoria</p>
                                                         </div>
                                                     ) : (
-                                                        categoryItems.map((item, index) => (
+                                                        categoryItems.map((item) => (
                                                             <div
                                                                 key={item.id}
                                                                 draggable
                                                                 onDragStart={() => handleItemDragStart(item)}
                                                                 onDragOver={handleItemDragOver}
-                                                                onDrop={(e) => handleItemDrop(e, category.id, index)}
+                                                                onDrop={handleItemDrop}
                                                                 onDragEnd={handleItemDragEnd}
                                                                 className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-move ${
                                                                     draggedItem?.id === item.id ? 'opacity-50' : ''
