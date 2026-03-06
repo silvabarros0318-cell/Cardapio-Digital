@@ -277,6 +277,9 @@ export default function ItensCardapio() {
                                     type="text" required value={name} onChange={(e) => setName(e.target.value)}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FE5F55] outline-none"
                                     placeholder="Ex: X-Bacon Burger"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
                                 />
                             </div>
 
@@ -331,6 +334,9 @@ export default function ItensCardapio() {
                                     placeholder="Ingredientes e detalhes do produto..."
                                     maxLength={24} rows={3}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FE5F55] outline-none resize-none"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
                                 />
                                 <p className="text-xs text-gray-400 mt-1">Limite calibrado para caber no card do celular.</p>
                             </div>

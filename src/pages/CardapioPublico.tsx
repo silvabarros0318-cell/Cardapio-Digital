@@ -132,12 +132,26 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
             </div>
 
             {/* 2. Main Cover Image (Glued to banner) */}
-            <section className="relative w-full h-44 md:h-64 bg-slate-200">
-                <div
-                    className="absolute inset-0 bg-center bg-cover"
-                    style={{ backgroundImage: `url('${restaurant.cover_url || restaurant.logo_url || coverImage}')` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+            <section className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-slate-200 overflow-hidden">
+                {restaurant.cover_url || restaurant.logo_url || coverImage ? (
+                    <img
+                        src={restaurant.cover_url || restaurant.logo_url || coverImage}
+                        alt={`Capa do ${restaurant.name}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = coverImage;
+                        }}
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                        <div className="text-slate-400 text-center">
+                            <div className="text-4xl mb-2">🏪</div>
+                            <div className="text-sm font-medium">Sem imagem de capa</div>
+                        </div>
+                    </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
             </section>
 
             {/* 3. Restaurant Info Section (Logo Overlapping) */}
