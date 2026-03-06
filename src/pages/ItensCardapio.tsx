@@ -15,6 +15,7 @@ interface MenuItem {
     price: number;
     image_url: string;
     is_active: boolean;
+    display_order?: number;
     category: { name: string };
 }
 
@@ -22,6 +23,8 @@ export default function ItensCardapio() {
     const [items, setItems] = useState<MenuItem[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
+    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+    const [draggedItem, setDraggedItem] = useState<MenuItem | null>(null);
 
     // Form State
     const [isEditing, setIsEditing] = useState(false);
@@ -63,6 +66,8 @@ export default function ItensCardapio() {
             .from('menu_items')
             .select('*, category:categories(name)')
             .eq('restaurant_id', profile.restaurant_id)
+            .order('category_id')
+            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
 
         if (itemData) setItems(itemData);
@@ -172,6 +177,77 @@ export default function ItensCardapio() {
         setIsActive(true);
     };
 
+    const toggleCategoryExpansion = (categoryId: string) => {
+        const newExpanded = new Set(expandedCategories);
+        if (newExpanded.has(categoryId)) {
+            newExpanded.delete(categoryId);
+        } else {
+            newExpanded.add(categoryId);
+        }
+        setExpandedCategories(newExpanded);
+    };
+
+    const handleItemDragStart = (item: MenuItem) => {
+        setDraggedItem(item);
+    };
+
+    const handleItemDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+    };
+
+    const handleItemDrop = async (e: React.DragEvent, targetCategoryId: string, targetIndex: number) => {
+        e.preventDefault();
+        if (!draggedItem) return;
+
+        const newItems = [...items];
+
+        // Remove dragged item from its current position
+        const draggedIndex = newItems.findIndex(item => item.id === draggedItem.id);
+        if (draggedIndex === -1) return;
+
+        newItems.splice(draggedIndex, 1);
+
+        // Insert at new position
+        const insertIndex = newItems.findIndex(item => item.category_id === targetCategoryId) + targetIndex;
+
+        newItems.splice(insertIndex, 0, { ...draggedItem, category_id: targetCategoryId });
+
+        // Update display_order for items in the target category
+        const updatedItems = newItems.map(item => {
+            if (item.category_id === targetCategoryId) {
+                const categoryItems = newItems.filter(i => i.category_id === targetCategoryId);
+                const itemIndex = categoryItems.findIndex(i => i.id === item.id);
+                return { ...item, display_order: itemIndex + 1 };
+            }
+            return item;
+        });
+
+        setItems(updatedItems);
+        setDraggedItem(null);
+
+        // Update in database
+        const categoryItems = updatedItems.filter(item => item.category_id === targetCategoryId);
+        const updatePromises = categoryItems.map(item =>
+            supabase
+                .from('menu_items')
+                .update({ display_order: item.display_order, category_id: item.category_id })
+                .eq('id', item.id)
+        );
+
+        await Promise.all(updatePromises);
+        fetchData(); // Refresh to get updated data
+    };
+
+    const handleItemDragEnd = () => {
+        setDraggedItem(null);
+    };
+
+    // Group items by category
+    const itemsByCategory = categories.reduce((acc, category) => {
+        acc[category.id] = items.filter(item => item.category_id === category.id);
+        return acc;
+    }, {} as Record<string, MenuItem[]>);
+
     return (
         <div className="max-w-6xl mx-auto">
             <div className="mb-6">
@@ -179,11 +255,11 @@ export default function ItensCardapio() {
                 <p className="text-gray-500 text-sm">Gerencie os pratos, bebidas e combos oferecidos.</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
 
                 {/* Form Column */}
-                <div className="lg:col-span-1">
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-6">
+                <div className="xl:col-span-1 order-2 xl:order-1">
+                    <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm sticky top-6">
                         <h2 className="text-lg font-semibold mb-4 text-gray-800">
                             {isEditing ? 'Editar Produto' : 'Novo Produto'}
                         </h2>
@@ -298,73 +374,105 @@ export default function ItensCardapio() {
                 </div>
 
                 {/* List Column */}
-                <div className="lg:col-span-2">
+                <div className="xl:col-span-2 order-1 xl:order-2">
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                         {loading ? (
                             <div className="p-8 text-center text-gray-500">Buscando cardápio...</div>
-                        ) : items.length === 0 ? (
+                        ) : categories.length === 0 ? (
                             <div className="p-12 text-center flex flex-col items-center">
                                 <Tag className="w-12 h-12 text-gray-300 mb-3" />
-                                <h3 className="text-lg font-medium text-gray-900">Nenhum produto cadastrado</h3>
-                                <p className="text-gray-500 mt-1">Crie seus pratos e bebidas no formulário ao lado.</p>
+                                <h3 className="text-lg font-medium text-gray-900">Nenhuma categoria cadastrada</h3>
+                                <p className="text-gray-500 mt-1">Crie categorias primeiro para adicionar produtos.</p>
                             </div>
                         ) : (
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left text-sm text-gray-600">
-                                    <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium">
-                                        <tr>
-                                            <th className="py-3 px-4 w-16">Foto</th>
-                                            <th className="py-3 px-4">Nome do Item</th>
-                                            <th className="py-3 px-4">Categoria</th>
-                                            <th className="py-3 px-4">Preço</th>
-                                            <th className="py-3 px-4">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                        {items.map((item) => (
-                                            <tr key={item.id} className={`hover:bg-gray-50 group transition ${!item.is_active ? 'opacity-60 bg-gray-50/50' : ''}`}>
+                            <div className="divide-y divide-gray-100">
+                                {categories.map((category) => {
+                                    const categoryItems = itemsByCategory[category.id] || [];
+                                    const isExpanded = expandedCategories.has(category.id);
 
-                                                <td className="py-3 px-4">
-                                                    {item.image_url ? (
-                                                        <img src={item.image_url} alt={item.name} className="w-10 h-10 rounded-md object-cover border border-gray-200" />
-                                                    ) : (
-                                                        <div className="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center border border-gray-200 text-gray-300">
-                                                            <Camera className="w-5 h-5" />
-                                                        </div>
-                                                    )}
-                                                </td>
-
-                                                <td className="py-3 px-4">
-                                                    <div className="font-medium text-gray-900">{item.name}</div>
-                                                    {item.description && <div className="text-xs text-gray-500 truncate max-w-[200px] mt-0.5">{item.description}</div>}
-                                                    {!item.is_active && <span className="inline-block mt-1 text-[10px] uppercase font-bold text-gray-400 bg-gray-200 px-1.5 py-0.5 rounded">Inativo</span>}
-                                                </td>
-
-                                                <td className="py-3 px-4">
-                                                    <span className="inline-flex items-center px-2 py-1 rounded-md bg-[#EBF1FF] text-[#FE5F55] text-xs font-medium">
-                                                        {item.category?.name || 'Sem Categoria'}
-                                                    </span>
-                                                </td>
-
-                                                <td className="py-3 px-4 font-medium text-gray-900">
-                                                    {Number(item.price).toFixed(2)} KZ
-                                                </td>
-
-                                                <td className="py-3 px-4">
-                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button onClick={() => handleEdit(item)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md" title="Editar">
-                                                            <Edit2 className="w-4 h-4" />
-                                                        </button>
-                                                        <button onClick={() => handleDelete(item.id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md" title="Excluir">
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </button>
+                                    return (
+                                        <div key={category.id} className="p-4">
+                                            <div
+                                                className="flex items-center justify-between cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                                                onClick={() => toggleCategoryExpansion(category.id)}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
+                                                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                        </svg>
                                                     </div>
-                                                </td>
+                                                    <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                                                    <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                                        {categoryItems.length} item{categoryItems.length !== 1 ? 's' : ''}
+                                                    </span>
+                                                </div>
+                                            </div>
 
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                            {isExpanded && (
+                                                <div className="mt-4 space-y-2">
+                                                    {categoryItems.length === 0 ? (
+                                                        <div className="text-center py-8 text-gray-500">
+                                                            <Tag className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                                                            <p className="text-sm">Nenhum produto nesta categoria</p>
+                                                        </div>
+                                                    ) : (
+                                                        categoryItems.map((item, index) => (
+                                                            <div
+                                                                key={item.id}
+                                                                draggable
+                                                                onDragStart={() => handleItemDragStart(item)}
+                                                                onDragOver={handleItemDragOver}
+                                                                onDrop={(e) => handleItemDrop(e, category.id, index)}
+                                                                onDragEnd={handleItemDragEnd}
+                                                                className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-move ${
+                                                                    draggedItem?.id === item.id ? 'opacity-50' : ''
+                                                                }`}
+                                                            >
+                                                                <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                                                                    <div className="cursor-grab text-gray-400 flex-shrink-0">
+                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+                                                                        </svg>
+                                                                    </div>
+
+                                                                    {item.image_url ? (
+                                                                        <img src={item.image_url} alt={item.name} className="w-12 h-12 rounded-md object-cover border border-gray-200 flex-shrink-0" />
+                                                                    ) : (
+                                                                        <div className="w-12 h-12 rounded-md bg-gray-100 flex items-center justify-center border border-gray-200 text-gray-300 flex-shrink-0">
+                                                                            <Camera className="w-6 h-6" />
+                                                                        </div>
+                                                                    )}
+
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-medium text-gray-900">{item.name}</div>
+                                                                        {item.description && <div className="text-sm text-gray-500 truncate">{item.description}</div>}
+                                                                        {!item.is_active && <span className="inline-block mt-1 text-xs uppercase font-bold text-gray-400 bg-gray-200 px-2 py-0.5 rounded">Inativo</span>}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="flex items-center justify-between w-full sm:w-auto gap-3">
+                                                                    <div className="font-semibold text-gray-900">
+                                                                        {Number(item.price).toFixed(2)} KZ
+                                                                    </div>
+
+                                                                    <div className="flex gap-2 flex-shrink-0">
+                                                                        <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md" title="Editar">
+                                                                            <Edit2 className="w-4 h-4" />
+                                                                        </button>
+                                                                        <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md" title="Excluir">
+                                                                            <Trash2 className="w-4 h-4" />
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>

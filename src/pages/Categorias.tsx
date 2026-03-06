@@ -12,6 +12,7 @@ interface Category {
 export default function Categorias() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
     // Form State
     const [isEditing, setIsEditing] = useState(false);
@@ -111,6 +112,59 @@ export default function Categorias() {
         setDescription('');
     };
 
+    const handleDragStart = (index: number) => {
+        setDraggedIndex(index);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
+        e.preventDefault();
+        if (draggedIndex === null || draggedIndex === dropIndex) return;
+
+        const newCategories = [...categories];
+        const draggedItem = newCategories[draggedIndex];
+        newCategories.splice(draggedIndex, 1);
+        newCategories.splice(dropIndex, 0, draggedItem);
+
+        // Update display_order for all categories
+        const updatedCategories = newCategories.map((cat, index) => ({
+            ...cat,
+            display_order: index + 1
+        }));
+
+        setCategories(updatedCategories);
+        setDraggedIndex(null);
+
+        // Update in database
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) return;
+
+        const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('restaurant_id')
+            .eq('id', userData.user.id)
+            .single();
+
+        if (!profile) return;
+
+        // Update all categories with new order
+        const updatePromises = updatedCategories.map(cat =>
+            supabase
+                .from('categories')
+                .update({ display_order: cat.display_order })
+                .eq('id', cat.id)
+        );
+
+        await Promise.all(updatePromises);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedIndex(null);
+    };
+
     return (
         <div className="max-w-5xl mx-auto">
             <div className="flex justify-between items-center mb-6">
@@ -120,11 +174,11 @@ export default function Categorias() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
 
                 {/* Form Column */}
-                <div className="lg:col-span-1">
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-6">
+                <div className="xl:col-span-1 order-2 xl:order-1">
+                    <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm sticky top-6">
                         <h2 className="text-lg font-semibold mb-4 text-gray-800">
                             {isEditing ? 'Editar Categoria' : 'Nova Categoria'}
                         </h2>
@@ -173,7 +227,7 @@ export default function Categorias() {
                 </div>
 
                 {/* List Column */}
-                <div className="lg:col-span-2">
+                <div className="xl:col-span-2 order-1 xl:order-2">
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                         {loading ? (
                             <div className="p-8 text-center text-gray-500">Carregando categorias...</div>
@@ -187,9 +241,19 @@ export default function Categorias() {
                             </div>
                         ) : (
                             <ul className="divide-y divide-gray-100">
-                                {categories.map((cat) => (
-                                    <li key={cat.id} className="p-4 hover:bg-gray-50 flex items-center gap-4 group transition-colors">
-                                        <div className="cursor-grab text-gray-400 opacity-50 hover:opacity-100">
+                                {categories.map((cat, index) => (
+                                    <li
+                                        key={cat.id}
+                                        draggable
+                                        onDragStart={() => handleDragStart(index)}
+                                        onDragOver={handleDragOver}
+                                        onDrop={(e) => handleDrop(e, index)}
+                                        onDragEnd={handleDragEnd}
+                                        className={`p-4 hover:bg-gray-50 flex items-center gap-4 group transition-colors ${
+                                            draggedIndex === index ? 'opacity-50' : ''
+                                        }`}
+                                    >
+                                        <div className="cursor-grab text-gray-400 opacity-50 hover:opacity-100 active:cursor-grabbing">
                                             <GripVertical className="w-5 h-5" />
                                         </div>
                                         <div className="flex-1 min-w-0">
