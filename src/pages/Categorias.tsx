@@ -69,7 +69,12 @@ export default function Categorias() {
                 .update({ name, description })
                 .eq('id', currentId);
 
-            if (error) alert(error.message);
+            if (error) {
+                console.error('Erro ao atualizar categoria:', error);
+                alert('Erro ao atualizar categoria: ' + error.message);
+            } else {
+                console.log('Categoria atualizada com sucesso:', { id: currentId, name, description });
+            }
         } else {
             const newOrder = categories.length > 0
                 ? Math.max(...categories.map(c => c.display_order)) + 1

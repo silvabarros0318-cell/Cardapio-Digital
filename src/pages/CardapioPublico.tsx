@@ -123,7 +123,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
     if (!restaurant) return <div className="flex items-center justify-center min-h-screen font-bold">Restaurante não encontrado.</div>;
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
+        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-orange-50/20 dark:bg-slate-950 pb-20">
             {/* 1. Top Banner Bar (Brand Color) */}
             <div className="bg-[#FE5F55] py-3 px-4 text-center shadow-sm">
                 <h1 className="text-white font-bold text-base" translate="no">
@@ -141,7 +141,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
             </section>
 
             {/* 3. Restaurant Info Section (Logo Overlapping) */}
-            <section className="bg-white dark:bg-slate-900 px-4 pt-0 pb-6 relative shadow-sm">
+            <section className="bg-gradient-to-br from-white/80 to-amber-50/60 dark:bg-slate-900 px-4 pt-0 pb-6 relative shadow-sm backdrop-blur-sm">
                 <div className="max-w-3xl mx-auto flex items-end gap-4 relative">
                     {/* Overlapping Logo */}
                     <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-white p-1 shadow-xl -mt-12 relative z-20 overflow-hidden border border-slate-100">
@@ -169,13 +169,13 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
             </section>
 
             {/* 4. Category Navigation (Sticky) */}
-            <nav className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-y border-slate-100 dark:border-slate-800 py-4 shadow-sm">
+            <nav className="sticky top-0 z-50 bg-amber-50/90 dark:bg-slate-900/95 backdrop-blur-md border-y border-amber-100/50 dark:border-slate-800 py-4 shadow-sm">
                 <div className="max-w-3xl mx-auto flex gap-3 px-4 overflow-x-auto no-scrollbar scroll-smooth flex-nowrap">
                     <button
                         onClick={() => scrollToCategory('all')}
                         className={`flex h-10 shrink-0 items-center justify-center rounded-xl px-6 transition-all text-sm font-bold tracking-wide ${activeCategory === 'all'
                             ? 'bg-[#FE5F55] text-white shadow-lg shadow-red-200'
-                            : 'bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-700'
+                            : 'bg-white/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-amber-200/50 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700'
                             }`}
                     >
                         Tudo
@@ -187,7 +187,7 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
                             onClick={() => scrollToCategory(cat.id)}
                             className={`flex h-10 shrink-0 items-center justify-center rounded-xl px-6 transition-all text-sm font-bold tracking-wide ${activeCategory === cat.id
                                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-200'
-                                : 'bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-700'
+                                : 'bg-white/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-amber-200/50 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700'
                                 }`}
                             translate="no"
                         >
