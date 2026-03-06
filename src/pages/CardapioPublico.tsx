@@ -132,12 +132,12 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
             </div>
 
             {/* 2. Main Cover Image (Glued to banner) */}
-            <section className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-slate-200 overflow-hidden">
+            <section className="relative w-full h-64 sm:h-72 md:h-80 lg:h-96 bg-slate-200 overflow-hidden">
                 {restaurant.cover_url || restaurant.logo_url || coverImage ? (
                     <img
                         src={restaurant.cover_url || restaurant.logo_url || coverImage}
                         alt={`Capa do ${restaurant.name}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-center"
                         onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.src = coverImage;

@@ -138,6 +138,8 @@ export default function ItensCardapio() {
             is_active: isActive
         };
 
+        console.log('Dados sendo enviados:', itemData);
+
         if (isEditing && currentId) {
             const { error } = await supabase
                 .from('menu_items')
@@ -279,7 +281,10 @@ export default function ItensCardapio() {
                                     placeholder="Ex: X-Bacon Burger"
                                     autoCorrect="off"
                                     autoCapitalize="off"
+                                    autoComplete="off"
                                     spellCheck="false"
+                                    data-form-type="other"
+                                    inputMode="text"
                                 />
                             </div>
 
@@ -336,7 +341,10 @@ export default function ItensCardapio() {
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FE5F55] outline-none resize-none"
                                     autoCorrect="off"
                                     autoCapitalize="off"
+                                    autoComplete="off"
                                     spellCheck="false"
+                                    data-form-type="other"
+                                    inputMode="text"
                                 />
                                 <p className="text-xs text-gray-400 mt-1">Limite calibrado para caber no card do celular.</p>
                             </div>
