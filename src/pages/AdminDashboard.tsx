@@ -23,10 +23,6 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
-
     async function fetchDashboardData() {
         setLoading(true);
         const { data: { user } } = await supabase.auth.getUser();
@@ -54,6 +50,10 @@ export default function AdminDashboard() {
         }
         setLoading(false);
     }
+
+    useEffect(() => {
+        fetchDashboardData();
+    }, []);
 
     if (loading) return <div className="p-8 text-center text-gray-500 animate-pulse font-medium">Carregando seus dados...</div>;
 

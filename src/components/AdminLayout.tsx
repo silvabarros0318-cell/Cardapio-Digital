@@ -8,10 +8,6 @@ export default function AdminLayout() {
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<{ name: string, logo_url: string | null } | null>(null);
 
-    useEffect(() => {
-        fetchRestaurant();
-    }, []);
-
     async function fetchRestaurant() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -31,6 +27,10 @@ export default function AdminLayout() {
             }
         }
     }
+
+    useEffect(() => {
+        fetchRestaurant();
+    }, []);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();

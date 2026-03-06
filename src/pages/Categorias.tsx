@@ -21,9 +21,21 @@ export default function Categorias() {
 
     const fetchCategories = async () => {
         setLoading(true);
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) return;
+
+        const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('restaurant_id')
+            .eq('id', userData.user.id)
+            .single();
+
+        if (!profile) return;
+
         const { data, error } = await supabase
             .from('categories')
             .select('*')
+            .eq('restaurant_id', profile.restaurant_id)
             .order('display_order', { ascending: true });
 
         if (!error && data) {

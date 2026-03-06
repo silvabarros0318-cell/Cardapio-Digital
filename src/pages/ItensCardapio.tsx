@@ -39,10 +39,22 @@ export default function ItensCardapio() {
     const fetchData = async () => {
         setLoading(true);
 
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) return;
+
+        const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('restaurant_id')
+            .eq('id', userData.user.id)
+            .single();
+
+        if (!profile) return;
+
         // Buscar categorias
         const { data: catData } = await supabase
             .from('categories')
             .select('id, name')
+            .eq('restaurant_id', profile.restaurant_id)
             .order('display_order');
         if (catData) setCategories(catData);
 
@@ -50,6 +62,7 @@ export default function ItensCardapio() {
         const { data: itemData } = await supabase
             .from('menu_items')
             .select('*, category:categories(name)')
+            .eq('restaurant_id', profile.restaurant_id)
             .order('created_at', { ascending: false });
 
         if (itemData) setItems(itemData);
