@@ -8,27 +8,26 @@ export default function AdminLayout() {
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<{ name: string, logo_url: string | null } | null>(null);
 
-    async function fetchRestaurant() {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            const { data: profile } = await supabase
-                .from('user_profiles')
-                .select('restaurant_id')
-                .eq('id', user.id)
-                .single();
-
-            if (profile?.restaurant_id) {
-                const { data } = await supabase
-                    .from('restaurants')
-                    .select('name, logo_url')
-                    .eq('id', profile.restaurant_id)
+    useEffect(() => {
+        async function fetchRestaurant() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('restaurant_id')
+                    .eq('id', user.id)
                     .single();
-                if (data) setRestaurant(data);
+
+                if (profile?.restaurant_id) {
+                    const { data } = await supabase
+                        .from('restaurants')
+                        .select('name, logo_url')
+                        .eq('id', profile.restaurant_id)
+                        .single();
+                    if (data) setRestaurant(data);
+                }
             }
         }
-    }
-
-    useEffect(() => {
         fetchRestaurant();
     }, []);
 

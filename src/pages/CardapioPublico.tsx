@@ -39,70 +39,70 @@ export default function CardapioPublico({ isPreview = false }: { isPreview?: boo
     const coverImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000";
 
     useEffect(() => {
+        async function fetchRestaurantData() {
+            setLoading(true);
+            let resData = null;
+
+            if (isPreview) {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const { data: profile } = await supabase
+                        .from('user_profiles')
+                        .select('restaurant_id')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (profile?.restaurant_id) {
+                        const { data: res } = await supabase
+                            .from('restaurants')
+                            .select('*')
+                            .eq('id', profile.restaurant_id)
+                            .single();
+                        resData = res;
+                    } else {
+                        // Fallback case
+                        const { data: res } = await supabase
+                            .from('restaurants')
+                            .select('*')
+                            .eq('id', user.id)
+                            .single();
+                        resData = res;
+                    }
+                }
+            } else {
+                const { data } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('slug', slug)
+                    .single();
+                resData = data;
+            }
+
+            if (resData) {
+                setRestaurant(resData);
+
+                const { data: catData } = await supabase
+                    .from('categories')
+                    .select('*')
+                    .eq('restaurant_id', resData.id)
+                    .order('display_order');
+
+                const { data: itemData } = await supabase
+                    .from('menu_items')
+                    .select('*')
+                    .eq('restaurant_id', resData.id)
+                    .eq('is_active', true);
+
+                if (catData) setCategories(catData);
+                if (itemData) setItems(itemData);
+            }
+            setLoading(false);
+        }
+
         if (slug || isPreview) {
             fetchRestaurantData();
         }
     }, [slug, isPreview]);
-
-    async function fetchRestaurantData() {
-        setLoading(true);
-        let resData = null;
-
-        if (isPreview) {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data: profile } = await supabase
-                    .from('user_profiles')
-                    .select('restaurant_id')
-                    .eq('id', user.id)
-                    .single();
-
-                if (profile?.restaurant_id) {
-                    const { data: res } = await supabase
-                        .from('restaurants')
-                        .select('*')
-                        .eq('id', profile.restaurant_id)
-                        .single();
-                    resData = res;
-                } else {
-                    // Fallback case
-                    const { data: res } = await supabase
-                        .from('restaurants')
-                        .select('*')
-                        .eq('id', user.id)
-                        .single();
-                    resData = res;
-                }
-            }
-        } else {
-            const { data } = await supabase
-                .from('restaurants')
-                .select('*')
-                .eq('slug', slug)
-                .single();
-            resData = data;
-        }
-
-        if (resData) {
-            setRestaurant(resData);
-
-            const { data: catData } = await supabase
-                .from('categories')
-                .select('*')
-                .eq('restaurant_id', resData.id)
-                .order('display_order');
-
-            const { data: itemData } = await supabase
-                .from('menu_items')
-                .select('*')
-                .eq('restaurant_id', resData.id)
-                .eq('is_active', true);
-
-            if (catData) setCategories(catData);
-            if (itemData) setItems(itemData);
-        }
-        setLoading(false);
-    }
 
     const scrollToCategory = (id: string) => {
         setActiveCategory(id);

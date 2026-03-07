@@ -23,35 +23,34 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
 
-    async function fetchDashboardData() {
-        setLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const { data: profile } = await supabase
-            .from('user_profiles')
-            .select('restaurant_id')
-            .eq('id', user.id)
-            .single();
-
-        if (profile?.restaurant_id) {
-            const [res, cats, items] = await Promise.all([
-                supabase.from('restaurants').select('name, slug').eq('id', profile.restaurant_id).single(),
-                supabase.from('categories').select('id', { count: 'exact' }).eq('restaurant_id', profile.restaurant_id),
-                supabase.from('menu_items').select('id', { count: 'exact' }).eq('restaurant_id', profile.restaurant_id)
-            ]);
-
-            setStats({
-                restaurantName: res.data?.name || 'Seu Restaurante',
-                slug: res.data?.slug || '',
-                categoriesCount: cats.count || 0,
-                itemsCount: items.count || 0
-            });
-        }
-        setLoading(false);
-    }
-
     useEffect(() => {
+        async function fetchDashboardData() {
+            setLoading(true);
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data: profile } = await supabase
+                .from('user_profiles')
+                .select('restaurant_id')
+                .eq('id', user.id)
+                .single();
+
+            if (profile?.restaurant_id) {
+                const [res, cats, items] = await Promise.all([
+                    supabase.from('restaurants').select('name, slug').eq('id', profile.restaurant_id).single(),
+                    supabase.from('categories').select('id', { count: 'exact' }).eq('restaurant_id', profile.restaurant_id),
+                    supabase.from('menu_items').select('id', { count: 'exact' }).eq('restaurant_id', profile.restaurant_id)
+                ]);
+
+                setStats({
+                    restaurantName: res.data?.name || 'Seu Restaurante',
+                    slug: res.data?.slug || '',
+                    categoriesCount: cats.count || 0,
+                    itemsCount: items.count || 0
+                });
+            }
+            setLoading(false);
+        }
         fetchDashboardData();
     }, []);
 
